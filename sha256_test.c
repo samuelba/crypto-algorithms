@@ -53,9 +53,35 @@ int sha256_test()
 	return(pass);
 }
 
+void print_hash()
+{
+	BYTE text[] = {"abc"};
+	BYTE buf[SHA256_BLOCK_SIZE];
+	SHA256_CTX ctx;
+
+	sha256_init(&ctx);
+	sha256_update(&ctx, text, strlen(text));
+	sha256_final(&ctx, buf);
+
+	int i;
+	printf("{");
+	for (i = 0; i < SHA256_BLOCK_SIZE; ++i) {
+		if (i%8 == 0 && i > 0) {
+			printf("\n");
+		}
+		printf("0x%02X", buf[i]);
+		if (i != SHA256_BLOCK_SIZE - 1) {
+			printf(",");
+		}
+	}
+	printf("}");
+}
+
 int main()
 {
 	printf("SHA-256 tests: %s\n", sha256_test() ? "SUCCEEDED" : "FAILED");
+
+	print_hash();
 
 	return(0);
 }
